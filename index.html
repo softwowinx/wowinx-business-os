@@ -231,6 +231,22 @@
     #gate{padding:16px}
     #gate .box{padding:26px 22px}
     #pwdModal .pm-box{padding:22px}
+    /* Tablas como tarjetas apiladas (sin scroll lateral) */
+    .tbl-wrap{border:0;overflow:visible}
+    table{display:block;min-width:0;font-size:14px}
+    table thead{display:none}
+    table tbody{display:block}
+    table tr{display:block;border:1px solid var(--line);border-radius:11px;background:var(--surface);margin-bottom:10px;padding:4px 14px}
+    table td{display:flex;gap:14px;justify-content:space-between;align-items:baseline;text-align:right;
+      border:0;border-bottom:1px solid var(--line);padding:9px 0;color:var(--ink)}
+    table td:last-child{border-bottom:0}
+    table td::before{content:attr(data-label);flex:0 0 38%;text-align:left;white-space:normal;
+      font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+    table td.col-wx{color:var(--wx)} table td.col-vr{color:var(--vr)}
+    table.cmp td{border-left:0!important}
+    table td.dim{display:block;text-align:left;border-bottom:1px solid var(--line);padding:10px 0 9px;
+      font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:14.5px;font-weight:600;color:var(--ink)}
+    table td.dim::before{display:none}
   }
 
   /* ---------- Cancela de acceso (gate) ---------- */
@@ -429,9 +445,10 @@ function renderBlock(bl){
       var head='<tr>'+bl.head.map(function(h,i){return '<th'+(i===1&&bl.cls==='cmp'?' class="col-wx"':(i===2&&bl.cls==='cmp'?' class="col-vr"':''))+'>'+esc(h)+'</th>'}).join('')+'</tr>';
       var body=bl.rows.map(function(r){
         return '<tr>'+r.map(function(cell,i){
-          if(i===0) return '<td class="dim">'+esc(cell)+'</td>';
+          var dl=' data-label="'+esc(bl.head[i]||'')+'"';
+          if(i===0) return '<td class="dim"'+dl+'>'+esc(cell)+'</td>';
           var cls = bl.cls==='cmp'?(i===1?' class="col-wx"':' class="col-vr"'):'';
-          return '<td'+cls+'>'+esc(cell)+'</td>';
+          return '<td'+cls+dl+'>'+esc(cell)+'</td>';
         }).join('')+'</tr>';
       }).join('');
       return '<div class="tbl-wrap"><table class="'+bl.cls+'"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>';
